@@ -112,10 +112,10 @@ async def comment(request: Request):
 @app.post("/follow")
 async def follow(request: Request):
     form_data = await request.json()
-    follow_common_id = form_data["data"].get("follower_common_id")
-    common_id = form_data["data"].get("following_common_id")
+    follower_common_id = form_data["data"].get("follower_common_id")
+    following_common_id = form_data["data"].get("following_common_id")
     social_backend = Social_Backend()
-    result = social_backend.follow(common_id, follow_common_id)
+    result = social_backend.follow(follower_common_id, following_common_id)
     response_json = {"status": 200, "data": result}
     response_str = json.dumps(response_json)
     response = JSONResponse(content=response_str, status_code=200)

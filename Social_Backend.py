@@ -69,8 +69,8 @@ class Social_Backend:
                 user_number = exist_user[0][0]
                 for counter in range(10):
                     tweet_number = random.randint(10000000,99999999)
-                    if len(authentication.get_data_by_user_number(user_number)) == 0: 
-                        tweet_db.insert_data(tweet_number, user_number, tweet, self.date)
+                    if len(tweet_db.get_data_by_tweet_number(tweet_number)) == 0: 
+                        tweet_db.insert_data(tweet_number, user_number, tweet, self.date())
                         break              
                 return f"Tweet: {tweet_number}"
             else:
@@ -100,15 +100,21 @@ class Social_Backend:
         for counter in range(10):
             comment_number = random.randint(10000000,99999999)
             if len(comment_db.get_data_by_comment_number(comment_number)) == 0:
-                comment_db.insert_data(comment_number, user_number, tweet_number, comment, self.date)
+                comment_db.insert_data(comment_number, user_number, tweet_number, comment, self.date())
                 break
         return "Commented"
     
     def follow(self, common_person_id, follow_common_person_id):
         follow_db = Social_DB.Follows("Social_DB", "Follows")
         authentication = Social_DB.Authentication("Social_DB", "Authentication")
-        user_number = authentication.get_data_by_common_person_id(common_person_id)[0][0]
-        follow_user_number = authentication.get_data_by_common_person_id(follow_common_person_id)[0][0]
+        followed = follow_db.get_data_by_both_id(common_person_id, follow_common_person_id)
+        if len(followed) != 0:
+            return "Followed previously"
+        try:
+            user_number = authentication.get_data_by_common_person_id(common_person_id)[0][0]
+            follow_user_number = authentication.get_data_by_common_person_id(follow_common_person_id)[0][0]
+        except:
+            return "Invalid people_id"
         for counter in range(10):
             follow_number = random.randint(10000000,99999999)
             if len(follow_db.get_data_by_follow_number(follow_number)) == 0:
@@ -137,10 +143,13 @@ class Social_Backend:
         if len(exist_user) == 0:
             return "Invalid common_person_id"
         all_tweets = []
-        followings = follows.get_data_by_follower_user_number(common_person_id)
+        followings = follows.get_data_by_follower_user_number(exist_user[0][0])
+        print("=============================================================================",followings)
         for following in followings:
             following_user_number = following[2]
+            print(following_user_number)
             tweets = tweet_db.get_data_by_user_number(following_user_number)
+            print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++",tweets)
             for tweet in tweets:
                 all_tweets.append([tweet[1] ,tweet[2], tweet[3]])
         sorted_tweets = self.sort_tweets(all_tweets)
@@ -168,7 +177,7 @@ class Social_Backend:
         comment_db = Social_DB.Comments("Social_DB", "Comments")
         tweet = tweet_db.get_data_by_tweet_number(tweet_number)
         comments = comment_db.get_data_by_tweet_number(tweet_number)
-        data = {"tweets": tweet, "following": comments}
+        data = {"tweets": tweet, "comments": comments}
         return data
         
 
@@ -177,7 +186,7 @@ if __name__=="__main__":
 
     social_backend = Social_Backend()
     print(social_backend.signup("hassan@gmail.com", "Hassan123%", "Hassan", 123456, "Hassan", "Tehran", 30))
-    print(social_backend.signin("hassan@gmail.com",  "Hassan123%"))
-    print(social_backend.tweet(123456, "Hello World"))
-    print(social_backend.like(123456, 99110383))
+    #print(social_backend.signin("hassan@gmail.com",  "Hassan123%"))
+    #print(social_backend.tweet(123456, "Hello World"))
+    #print(social_backend.like(123456, 99110383))
     

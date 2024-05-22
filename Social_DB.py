@@ -85,6 +85,10 @@ class Tweet:
         self.c.execute(f"SELECT * FROM {self.tabel_name} WHERE tweet_number=:tweet_number",
         {'tweet_number':tweet_number})
         return  self.c.fetchall()
+    
+    def get_all_data(self):
+        self.c.execute(f"SELECT * FROM {self.tabel_name}")
+        return  self.c.fetchall()
         
     def drop_table(self):
         self.c.execute(f"DROP TABLE {self.tabel_name}")
@@ -156,6 +160,11 @@ class Comments:
         {'tweet_number':tweet_number})
         return  self.c.fetchall()
     
+    def get_data_by_comment_number(self,comment_number):
+        self.c.execute(f"SELECT * FROM {self.tabel_name} WHERE comment_number=:comment_number",
+        {'comment_number':comment_number})
+        return  self.c.fetchall()
+    
     def get_all_data(self):
         self.c.execute(f"SELECT * FROM {self.tabel_name}")
         return  self.c.fetchall()
@@ -184,6 +193,11 @@ class Follows:
         {'follow_number':follow_number,'follower_user_number':follower_user_number,'following_user_number':following_user_number})
         self.conn.commit()
 
+    def get_data_by_follow_number(self,follow_number):
+        self.c.execute(f"SELECT * FROM {self.tabel_name} WHERE follow_number=:follow_number",
+        {'follow_number':follow_number})
+        return  self.c.fetchall()
+
     def get_data_by_follower_user_number(self,follower_user_number):
         self.c.execute(f"SELECT * FROM {self.tabel_name} WHERE follower_user_number=:follower_user_number",
         {'follower_user_number':follower_user_number})
@@ -192,6 +206,11 @@ class Follows:
     def get_data_by_following_user_number(self,following_user_number):
         self.c.execute(f"SELECT * FROM {self.tabel_name} WHERE following_user_number=:following_user_number",
         {'following_user_number':following_user_number})
+        return  self.c.fetchall()
+    
+    def get_data_by_both_id(self,follower_user_number,following_user_number):
+        self.c.execute(f"SELECT * FROM {self.tabel_name} WHERE follower_user_number=:follower_user_number AND following_user_number=:following_user_number",
+        {'follower_user_number':follower_user_number, 'following_user_number':following_user_number})
         return  self.c.fetchall()
     
     def get_all_data(self):
@@ -208,9 +227,11 @@ if __name__=="__main__":
 
     authentication = Authentication("Social_DB", "Authentication")
     likes = Likes("Social_DB", "Likes")
+    follows = Follows("Social_DB", "Follows")
+    tweet = Tweet("Social_DB", "Tweets")
     #print(authentication.get_all_data())
     #print(authentication.get_data_by_email("hassan@gmail.com"))
-    print(likes.get_all_data())
+    print(tweet.get_all_data())
 
 
 
