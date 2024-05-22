@@ -143,4 +143,26 @@ async def feed_page(request: Request):
     response = JSONResponse(content=response_str, status_code=200)
     return response
 
+@app.post("/home-page")
+async def home_page(request: Request):
+    form_data = await request.json()
+    common_id = form_data["data"].get("common_id")
+    social_backend = Social_Backend()
+    result = social_backend.home_page(common_id)
+    response_json = {"status": 200, "data": result}
+    response_str = json.dumps(response_json)
+    response = JSONResponse(content=response_str, status_code=200)
+    return response
+
+@app.post("/tweet-page")
+async def tweet_page(request: Request):
+    form_data = await request.json()
+    tweet_number = form_data["data"].get("tweet_number")
+    social_backend = Social_Backend()
+    result = social_backend.tweet_page(tweet_number)
+    response_json = {"status": 200, "data": result}
+    response_str = json.dumps(response_json)
+    response = JSONResponse(content=response_str, status_code=200)
+    return response
+
 

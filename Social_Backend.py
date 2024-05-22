@@ -142,9 +142,33 @@ class Social_Backend:
             following_user_number = following[2]
             tweets = tweet_db.get_data_by_user_number(following_user_number)
             for tweet in tweets:
-                all_tweets.append([tweet[2], tweet[3]])
+                all_tweets.append([tweet[1] ,tweet[2], tweet[3]])
         sorted_tweets = self.sort_tweets(all_tweets)
         data = {"user": exist_user, "tweets": sorted_tweets}
+        return data
+    
+    def home_page(self, common_person_id):
+        following = []
+        authentication = Social_DB.Authentication("Social_DB", "Authentication")
+        tweet_db = Social_DB.Tweet("Social_DB", "Tweets")
+        follows = Social_DB.Follows("Social_DB", "Follows")
+        exist_user = authentication.get_data_by_common_person_id(common_person_id)
+        if len(exist_user) == 0:
+            return "Invalid common_person_id"
+        follows = follows.get_data_by_follower_user_number(exist_user[0][0])
+        for follow in follows:
+            following.append(follow[2])
+        tweets = tweet_db.get_data_by_user_number(exist_user[0][0])
+        sorted_tweets = self.sort_tweets(tweets)
+        data = {"user": exist_user, "tweets": sorted_tweets, "following": following}
+        return data
+    
+    def tweet_page(self, tweet_number):
+        tweet_db = Social_DB.Tweet("Social_DB", "Tweets")
+        comment_db = Social_DB.Comments("Social_DB", "Comments")
+        tweet = tweet_db.get_data_by_tweet_number(tweet_number)
+        comments = comment_db.get_data_by_tweet_number(tweet_number)
+        data = {"tweets": tweet, "following": comments}
         return data
         
 
