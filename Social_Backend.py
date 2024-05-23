@@ -48,14 +48,15 @@ class Social_Backend:
                 salt_part = exist_user[0][4]
                 salt_password = (password + salt_part).encode('utf-8')
                 hashed_password = hashlib.sha256(salt_password).hexdigest()
+                print(exist_user[0])
                 if hashed_password == exist_user[0][3]:
-                    return "Authentication completed"
+                    return "Authentication completed", exist_user[0][1]
                 else:
-                    return "Invalid password"
+                    return "Invalid password", None
             else:
-                return "Invalid email"
+                return "Invalid email", None
         else:
-            return "Invalid email"
+            return "Invalid email", None
 
     def date(self):
         return time.strftime("%Y-%m-%d %H:%M:%S")

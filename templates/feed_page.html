@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Feed Page</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <!-- Left Column -->
+            <div class="col-md-3">
+                <h2>Actions</h2>
+                <form method="post" action="{{ url_for('search_results') }}">
+                    <div class="form-group">
+                        <label for="search_query">Search:</label>
+                        <input type="text" class="form-control" id="search_query" name="search_query">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </form>
+                <br>
+                <form action="{{ url_for('make_tweet') }}">
+                    <button type="submit" class="btn btn-secondary">Make Tweet</button>
+                </form>
+
+                <form action="{{ url_for('logout') }}">
+                    <button type="submit" class="btn btn-secondary">Log out</button>
+                </form>
+            </div>
+
+            <!-- Middle Column -->
+            <div class="col-md-6">
+                <h2>Feed</h2>
+                {% for tweet in feed_data['tweets'] %}
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ tweet[1] }}</h5>
+                            <h4 class="card-title">{{ tweet[2] }}</h5>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Right Column -->
+            <div class="col-md-3">
+                <h2>Following</h2>
+                <ul class="list-group">
+                    {% for user in feed_data['user'] %}
+                        <li class="list-group-item">{{ user[5] }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

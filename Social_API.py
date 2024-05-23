@@ -44,14 +44,10 @@ async def sign_up(request: Request):
     result = social_backend.signup(email, password, username, common_id, name, city, age)
     if result == "Authentication completed":
         response_json = {"status": 200, "data": "User added to the system successfuly"}
-        response_str = json.dumps(response_json)
-        response = JSONResponse(content=response_str, status_code=422)
-        return response
+        return JSONResponse(content=response_json)
     else:
         response_json = {"status": 422, "data": "Email address or password is not valid."}
-        response_str = json.dumps(response_json)
-        response = JSONResponse(content=response_str, status_code=422)
-        return response
+        return JSONResponse(content=response_json)
     
 
 @app.post("/sign-in")
@@ -60,17 +56,13 @@ async def sign_in(request: Request):
     username = form_data["data"].get("email")
     password = form_data["data"].get("password")
     social_backend = Social_Backend()
-    result = social_backend.signin(username, password)
+    result, id = social_backend.signin(username, password)
     if result == "Authentication completed":
-        response_json = {"status": 200, "data": "User signed in successfuly"}
-        response_str = json.dumps(response_json)
-        response = JSONResponse(content=response_str, status_code=200)
-        return response
+        response_json = {"status": 200, "data": id}
+        return JSONResponse(content=response_json)
     else:
         response_json = {"status": 422, "data": "Email address or password is not valid."}
-        response_str = json.dumps(response_json)
-        response = JSONResponse(content=response_str, status_code=422)
-        return response
+        return JSONResponse(content=response_json)
     
 @app.post("/tweet")
 async def tweet(request: Request):
@@ -80,9 +72,7 @@ async def tweet(request: Request):
     social_backend = Social_Backend()
     result = social_backend.tweet(common_id, tweet)
     response_json = {"status": 200, "data": result}
-    response_str = json.dumps(response_json)
-    response = JSONResponse(content=response_str, status_code=200)
-    return response
+    return JSONResponse(content=response_json)
 
 @app.post("/like")
 async def like(request: Request):
@@ -128,9 +118,7 @@ async def search_username(request: Request):
     social_backend = Social_Backend()
     result = social_backend.search_username(username)
     response_json = {"status": 200, "data": result}
-    response_str = json.dumps(response_json)
-    response = JSONResponse(content=response_str, status_code=200)
-    return response
+    return JSONResponse(content=response_json)
 
 @app.post("/feed-page")
 async def feed_page(request: Request):
@@ -138,6 +126,26 @@ async def feed_page(request: Request):
     common_id = form_data["data"].get("common_id")
     social_backend = Social_Backend()
     result = social_backend.feed_page(common_id)
+    response_json = {"status": 200, "data": result}
+    return JSONResponse(content=response_json)
+
+@app.post("/home-page")
+async def home_page(request: Request):
+    form_data = await request.json()
+    common_id = form_data["data"].get("common_id")
+    social_backend = Social_Backend()
+    result = social_backend.home_page(common_id)
+    response_json = {"status": 200, "data": result}
+    response_str = json.dumps(response_json)
+    response = JSONResponse(content=response_str, status_code=200)
+    return response
+
+@app.post("/tweet-page")
+async def tweet_page(request: Request):
+    form_data = await request.json()
+    tweet_number = form_data["data"].get("tweet_number")
+    social_backend = Social_Backend()
+    result = social_backend.tweet_page(tweet_number)
     response_json = {"status": 200, "data": result}
     response_str = json.dumps(response_json)
     response = JSONResponse(content=response_str, status_code=200)

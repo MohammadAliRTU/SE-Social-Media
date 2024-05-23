@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Make Tweet</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Make Tweet</h2>
+        <form method="post" action="{{ url_for('make_tweet') }}">
+            <div class="form-group">
+                <label for="tweet_content">Tweet:</label>
+                <textarea class="form-control" id="tweet_content" name="tweet_content" required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Post Tweet</button>
+        </form>
+    </div>
+</body>
+</html>
